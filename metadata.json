@@ -1,0 +1,8 @@
+{
+  "name": "RESUMYY",
+  "description": "Dynamic Resume Tailoring Engine powered by AI. Optimize resumes for ATS compatibility, extract keywords, and generate professionally tailored resumes.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

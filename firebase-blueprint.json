@@ -1,0 +1,77 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "App user profile information",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "name", "email", "createdAt"]
+    },
+    "Resume": {
+      "title": "Resume",
+      "description": "Resume data and optimization results",
+      "type": "object",
+      "properties": {
+        "resumeId": { "type": "string" },
+        "userId": { "type": "string" },
+        "originalResume": { "type": "object" },
+        "optimizedResume": { "type": "object" },
+        "uploadDate": { "type": "string", "format": "date-time" },
+        "jobTitle": { "type": "string" },
+        "status": { "type": "string", "enum": ["uploaded", "analyzed", "optimized"] }
+      },
+      "required": ["resumeId", "userId", "originalResume", "uploadDate", "status"]
+    },
+    "JobDescription": {
+      "title": "Job Description",
+      "description": "Stored job descriptions for comparison",
+      "type": "object",
+      "properties": {
+        "jdId": { "type": "string" },
+        "userId": { "type": "string" },
+        "jobDescription": { "type": "string" },
+        "extractedKeywords": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["jdId", "userId", "jobDescription"]
+    },
+    "ATSScore": {
+      "title": "ATS Score",
+      "description": "APS score evaluation records",
+      "type": "object",
+      "properties": {
+        "scoreId": { "type": "string" },
+        "resumeId": { "type": "string" },
+        "userId": { "type": "string" },
+        "originalScore": { "type": "number" },
+        "optimizedScore": { "type": "number" },
+        "improvementPercentage": { "type": "number" },
+        "missingKeywords": { "type": "array", "items": { "type": "string" } },
+        "keywordMatch": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["scoreId", "resumeId", "userId", "originalScore"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profiles"
+    },
+    "/users/{userId}/resumes/{resumeId}": {
+      "schema": "Resume",
+      "description": "Resumes uploaded by the user"
+    },
+    "/users/{userId}/jobDescriptions/{jdId}": {
+      "schema": "JobDescription",
+      "description": "Job descriptions entered by the user"
+    },
+    "/users/{userId}/scores/{scoreId}": {
+      "schema": "ATSScore",
+      "description": "ATS scores generated for the user"
+    }
+  }
+}
