@@ -11,7 +11,7 @@ import {
 } from 'firebase/auth';
 import { auth, db } from '../lib/firebase';
 import { setDoc, doc } from 'firebase/firestore';
-import { LogIn, UserPlus, Mail, Lock, User as UserIcon } from 'lucide-react';
+import { LogIn, UserPlus, Mail, Lock, User as UserIcon, Shield } from 'lucide-react';
 
 export const AuthPage: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -170,6 +170,15 @@ export const AuthPage: React.FC = () => {
             {isLogin ? 'CREATE ACCOUNT' : 'LOGIN HERE'}
           </button>
         </p>
+
+        <div className="mt-6 pt-6 border-t border-white/5 flex justify-center">
+          <button 
+            onClick={() => navigate('/admin/auth')}
+            className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-600 hover:text-red-500 transition-colors flex items-center gap-2"
+          >
+            <Shield className="w-3 h-3" /> System Admin Access
+          </button>
+        </div>
       </Card>
     </div>
   );

@@ -14,6 +14,7 @@ import { db } from './lib/firebase';
 // Pages
 import { LandingPage } from './pages/LandingPage';
 import { AuthPage } from './pages/AuthPage';
+import { AdminAuthPage } from './pages/AdminAuthPage';
 import { Dashboard } from './pages/Dashboard';
 import { ResumeUpload } from './pages/ResumeUpload';
 import { JobAnalysis } from './pages/JobAnalysis';
@@ -45,6 +46,7 @@ export default function App() {
             <Routes>
               <Route path="/" element={<LandingPage />} />
               <Route path="/auth" element={<AuthPage />} />
+              <Route path="/admin/auth" element={<AdminAuthPage />} />
               
               <Route path="/dashboard" element={
                 <ProtectedRoute>

@@ -42,15 +42,50 @@ async function startServer() {
       const parser = new PDFParse({ data: uint8Array });
       
       const result = await parser.getText();
-      const text = result.text?.trim() || "";
+      let text = result.text?.trim() || "";
       
       // Cleanup to prevent memory leaks, especially for large files
       await parser.destroy();
       
       console.log("PDF parsed successfully. Text length:", text.length);
       
+      // Heuristic: If text length is very low, it might be a scanned PDF or image-based.
+      // Resumes usually have at least 500+ characters. 150 is a safe threshold for "very sparse".
+      if (text.length < 150) {
+        console.log(`Sparse text detected (${text.length} chars). Attempting AI-driven OCR with Gemini...`);
+        try {
+          const ocrResponse = await ai.models.generateContent({
+            model: "gemini-3-flash-preview",
+            contents: {
+              parts: [
+                {
+                  inlineData: {
+                    mimeType: "application/pdf",
+                    data: base64Pdf
+                  }
+                },
+                {
+                  text: "You are an expert OCR service. This PDF is a resume that appears to be a scanned image. Please extract all visible text from it exactly as it appears. Maintain the structure and information. Provide ONLY the extracted text."
+                }
+              ]
+            }
+          });
+
+          const ocrText = ocrResponse.text?.trim() || "";
+          if (ocrText.length > text.length) {
+            console.log(`AI OCR successful. Extracted text length: ${ocrText.length}`);
+            text = ocrText;
+          } else {
+            console.log("AI OCR did not provide more text than standard parsing. Keeping original.");
+          }
+        } catch (ocrError) {
+          console.error("AI OCR Error:", ocrError);
+          // If OCR fails, we still have the original (possibly empty) text
+        }
+      }
+      
       if (text.length === 0) {
-        console.warn("Parsed PDF resulted in empty text");
+        console.warn("Parsed PDF resulted in empty text even after OCR attempt");
       }
 
       res.json({ text });
